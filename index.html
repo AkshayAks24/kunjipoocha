@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Surprise Quiz</title>
+  
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: url('assets/me-her-tada.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #333;
+    }
+    .container {
+      background: rgba(255, 240, 246, 0.9);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(255, 105, 180, 0.3);
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      transition: transform 0.4s;
+      position: relative;
+    }
+    .shake {
+      animation: shake 0.5s;
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      50% { transform: translateX(10px); }
+      75% { transform: translateX(-10px); }
+      100% { transform: translateX(0); }
+    }
+    .fall {
+      animation: fall 1s forwards;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(800px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    .celebrate {
+      animation: celebrate 1s ease-in-out;
+    }
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3) rotate(10deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+    }
+    .options button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      border: none;
+      background-color: #ff69b4;
+      color: white;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .options button:hover {
+      background-color: #d63a8b;
+    }
+    .treasure {
+      display: none;
+      margin-top: 20px;
+    }
+    img {
+      max-width: 100%;
+      border-radius: 15px;
+    }
+    h1 {
+      color: #d63a8b;
+      text-shadow: 1px 1px 3px #fff;
+    }
+    #playAgainBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #d63a8b;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #confetti {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #startScreen {
+      text-align: center;
+    }
+    #startBtn {
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <audio id="bgMusic" src="assets/bensound-smile.mp3" loop></audio>
+  <audio id="wrongSound" src="assets/fart-91011.mp3"></audio>
+  <audio id="applauseSound" src="assets/applause-8.mp3"></audio>
+  <audio id="rightSound" src="assets/yaaa.ogg"></audio>
+
+  <canvas id="confetti"></canvas>
+
+  <div class="container" id="startScreen">
+    <h1>Let's Begin the Love Adventure 💘</h1>
+    <h2>use earphone for better experience</h2>
+    <button id="startBtn" onclick="startGame()">Start Game</button>
+  </div>
+  
+  <div class="container" id="mainContainer" style="display:none">
+    <h1>🎂 Don't be an idiot kunjee... be like unni and answer it😎 🎉</h1>
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <div class="options" id="options"></div>
+    </div>
+    <div class="treasure" id="treasure">
+      <h2>💖 You did it, sweetheart! Here's your surprise! 💖</h2>
+      <img src="https://media.giphy.com/media/xUPGcl3ijl0gXDjKTS/giphy.gif" alt="Treasure Image" />
+      <p>You're the greatest gift in my life 💕</p>
+      <button id="playAgainBtn" onclick="resetGame()">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "Which flower is known as the symbol of love?",
+        options: ["Rose", "Lily", "Tulip", "Sunflower"],
+        answer: "Rose"
+      },
+      {
+        question: "What is the sweetest nickname you’ve ever given me?",
+        options: ["Panda", "Pumpkin", "Lovebug", "Cutiepie"],
+        answer: "Lovebug"
+      },
+      {
+        question: "What color do I look best in (according to you)?",
+        options: ["Red", "Blue", "Black", "Pink"],
+        answer: "Pink"
+      },
+      {
+        question: "Our dream vacation spot together is:",
+        options: ["Paris", "Bali", "Switzerland", "Maldives"],
+        answer: "Maldives"
+      }
+    ];
+
+    let currentQuestionIndex = 0;
+
+    function startGame() {
+      document.getElementById("startScreen").style.display = "none";
+      document.getElementById("mainContainer").style.display = "block";
+
+      const bgMusic = document.getElementById("bgMusic");
+      const wrongSound = document.getElementById("wrongSound");
+      const rightSound = document.getElementById("rightSound");
+      const applauseSound = document.getElementById("applauseSound");
+
+      bgMusic.volume = 0.2;
+      wrongSound.volume = 1.0;
+      rightSound.volume = 1.0;
+      applauseSound.volume = 1.0;
+
+      bgMusic.play();
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const current = questions[currentQuestionIndex];
+      const questionDiv = document.getElementById("question");
+      const optionsDiv = document.getElementById("options");
+
+      questionDiv.textContent = current.question;
+      optionsDiv.innerHTML = "";
+      current.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(btn, opt);
+        optionsDiv.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(button, selected) {
+      const current = questions[currentQuestionIndex];
+      const container = document.getElementById("mainContainer");
+      if (selected === current.answer) {
+        document.getElementById("rightSound").play();
+        button.classList.add("celebrate");
+        setTimeout(() => button.classList.remove("celebrate"), 1000);
+        currentQuestionIndex++;
+        setTimeout(() => {
+          if (currentQuestionIndex < questions.length) {
+            showQuestion();
+          } else {
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("treasure").style.display = "block";
+            document.getElementById("applauseSound").play();
+          }
+        }, 1000);
+      } else {
+        document.getElementById("wrongSound").currentTime = 0;
+        document.getElementById("wrongSound").play();
+        container.classList.add("shake");
+        button.classList.add("fall");
+        setTimeout(() => container.classList.remove("shake"), 500);
+      }
+    }
+
+    function resetGame() {
+      currentQuestionIndex = 0;
+      document.getElementById("treasure").style.display = "none";
+      document.getElementById("quiz").style.display = "block";
+      showQuestion();
+    }
+  </script>
+</body>
+</html>
