@@ -126,7 +126,9 @@
   <audio id="bgMusic" src="assets/bensound-smile.mp3" loop></audio>
   <audio id="wrongSound" src="assets/fart-91011.mp3"></audio>
   <audio id="applauseSound" src="assets/applause-8.mp3"></audio>
+  <audio id="applauseSound2" src="assets/hosiana.ogg"></audio>
   <audio id="rightSound" src="assets/yaaa.ogg"></audio>
+  
 
   <canvas id="confetti"></canvas>
 
@@ -153,26 +155,41 @@
   </div>
 
   <script>
-    const questions = [
+      const questions = [
       {
-        question: "Which flower is known as the symbol of love?",
-        options: ["Rose", "Lily", "Tulip", "Sunflower"],
-        answer: "Rose"
+        question: "where did we meet first time after become couple?",
+        options: ["moodadi", "Naduroad", "College","newzeland"],
+        answer: "College"
       },
       {
-        question: "What is the sweetest nickname you’ve ever given me?",
-        options: ["Panda", "Pumpkin", "Lovebug", "Cutiepie"],
-        answer: "Lovebug"
+        question: "What's my favorite nickname for you?",
+        options: ["Kunjoochi", "Kunjoochi poocha", "kunjooochi","kunji" ],
+        answer: "kunjooochi"
       },
       {
-        question: "What color do I look best in (according to you)?",
-        options: ["Red", "Blue", "Black", "Pink"],
-        answer: "Pink"
+        question: "What food do we both love the most?",
+        options: ["Tea", "Mandi", "Biriyani", "Coffee"],
+        answer: "Tea"
       },
       {
-        question: "Our dream vacation spot together is:",
-        options: ["Paris", "Bali", "Switzerland", "Maldives"],
-        answer: "Maldives"
+        question: "What makes our love story unique",
+        options: ["Our laughter", "Our arguments", "Our adventures", "Our silence"],
+        answer: "Our adventures"
+      },
+      {
+        question: "What’s your superpower in our relationship?",
+        options: ["Making me smile", "Forgetting things" ,"Arguing and winning", "Being lazy"],
+        answer: "Forgetting things"
+      },
+      {
+        question: "Where do I want to take you someday?",
+        options: ["Newzelad", "America", "China", "toda village"],
+        answer: "toda village"
+      },
+      {
+        question: "Whene is kunjooochi is original bday?",
+        options: ["December 24", "Januvary 08", "May 24", "March 36"],
+        answer: "March 36"
       }
     ];
 
@@ -190,7 +207,8 @@
       bgMusic.volume = 0.2;
       wrongSound.volume = 1.0;
       rightSound.volume = 1.0;
-      applauseSound.volume = 1.0;
+      applauseSound.volume = 0.1;
+      applauseSound2.volume = 1.0;
 
       bgMusic.play();
       showQuestion();
@@ -226,6 +244,7 @@
             document.getElementById("quiz").style.display = "none";
             document.getElementById("treasure").style.display = "block";
             document.getElementById("applauseSound").play();
+            document.getElementById("applauseSound2").play();
           }
         }, 1000);
       } else {
